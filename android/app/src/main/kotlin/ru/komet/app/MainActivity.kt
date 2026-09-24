@@ -939,7 +939,7 @@ class MainActivity : FlutterActivity() {
 
     // Движок переживает смерть активити, пока идёт звонок или включён FKM:
     // в обоих случаях в фоне должно жить то же соединение, что и в UI.
-    private fun keepEngineAlive(): Boolean = CallState.inCall || FkmState.enabled
+    private fun keepEngineAlive(): Boolean = CallState.inCall
 
     override fun provideFlutterEngine(context: Context): FlutterEngine? {
         val cache = FlutterEngineCache.getInstance()
@@ -965,7 +965,7 @@ class MainActivity : FlutterActivity() {
     override fun onDestroy() {
         shareExecutor.shutdown()
         if (keepEngineAlive() && isFinishing) {
-            Log.d("KometFcm", "task removed, caching engine (call=${CallState.inCall} fkm=${FkmState.enabled})")
+            Log.d("KometFcm", "task removed, caching engine for active call")
             flutterEngine?.let { FlutterEngineCache.getInstance().put(KEEP_ENGINE_ID, it) }
         }
         super.onDestroy()
